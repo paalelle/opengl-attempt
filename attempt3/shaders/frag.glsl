@@ -9,8 +9,8 @@ uniform vec3 lightDir;
 uniform vec3 lightColor;
 
 vec3 baseColor = vec3(0.5, 0.8, 0.9);
-float specularStrength = 0.8;
-float shininess = 32.0;
+float specularStrength = 0.8;           //高光强度系数
+float shininess = 32.0;                 //高光范围系数
 
 void main(){
     vec3 nlightDir = normalize(lightDir);
@@ -22,6 +22,7 @@ void main(){
     float ambientk = max(0.2, 0.3 * dot(vec3(0, -1.0, 0), wNormal));
     vec3 ambient = ambientk * lightColor;
 
+    //Blinn-Phong
     float speculark = max(0.0, dot(wNormal, normalize(nviewDir - lightDir)));
     speculark = specularStrength * pow(speculark, shininess);
     vec3 specular = speculark * lightColor;

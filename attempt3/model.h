@@ -43,7 +43,10 @@ private:
 public:
     Texture();
 
+    //绑定纹理id并设置此纹理的环绕、过滤方式
     void SetGLInfo();
+
+    //从文件中加载纹理图片(先调用SetGLInfo!)
     void LoadFromFile(const char *path, TextureType t);
 };
 
@@ -73,6 +76,7 @@ public:
     void ImportModel(const char *path);
 };
 
+//网格连接类,保存对应网格的位置信息
 class MeshLinker{
 private:
     Mesh *pmesh;

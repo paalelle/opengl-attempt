@@ -78,7 +78,7 @@ void init(){
 	//启用深度测试
 	glEnable(GL_DEPTH_TEST);
 	//背面剔除
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	//?
 	glDepthFunc(GL_LEQUAL);
 	//======================================定义着色器========================================

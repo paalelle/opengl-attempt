@@ -31,6 +31,7 @@ public:
 	//启用此着色器
 	void Use();
 
+	//以下为向对应Uniform变量传递数据的函数
 	void SendUniform_bool(bool value, const char *var_name);
 	void SendUniform_Int(int value, const char *var_name);
 	void SendUniform_float(float value, const char *var_name);

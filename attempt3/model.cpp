@@ -28,7 +28,9 @@ void Texture::LoadFromFile(const char *path, TextureType t){
 	unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 	if(data)
 	{
+		//生成纹理
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//生成mipmap
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -137,38 +139,38 @@ void Mesh::ImportModel(const char *path){
 	//for(int i = 0; i < scene->mNumMeshes; i++){
 	//	aiMesh *m = scene->mMeshes[i];
 	
-	//测试阶段
-	//只管第一个mesh
-	aiMesh *m = scene->mMeshes[0];
-	std::cout << "顶点总数: " << m->mNumVertices << "   面总数: " << m->mNumFaces << std::endl;
-	for(unsigned j = 0; j < m->mNumVertices; j++){
-		Vertex vert;
-		glm::vec3 tmpvec;
-		tmpvec.x = m->mVertices[j].x;
-		tmpvec.y = m->mVertices[j].y;
-		tmpvec.z = m->mVertices[j].z;
-		vert.Position = tmpvec;
+		//测试阶段
+		//只管第一个mesh
+		aiMesh *m = scene->mMeshes[0];
+		std::cout << "顶点总数: " << m->mNumVertices << "   面总数: " << m->mNumFaces << std::endl;
+		for(unsigned j = 0; j < m->mNumVertices; j++){
+			Vertex vert;
+			glm::vec3 tmpvec;
+			tmpvec.x = m->mVertices[j].x;
+			tmpvec.y = m->mVertices[j].y;
+			tmpvec.z = m->mVertices[j].z;
+			vert.Position = tmpvec;
 
-		tmpvec.x = m->mNormals[j].x;
-		tmpvec.y = m->mNormals[j].y;
-		tmpvec.z = m->mNormals[j].z;
-		vert.Normal = tmpvec;
+			tmpvec.x = m->mNormals[j].x;
+			tmpvec.y = m->mNormals[j].y;
+			tmpvec.z = m->mNormals[j].z;
+			vert.Normal = tmpvec;
 
-		if(m->mTextureCoords[0]){
-			vert.TexCoords.x = m->mTextureCoords[0][j].x;
-			vert.TexCoords.y = m->mTextureCoords[0][j].y;
-		}
-		else vert.TexCoords = glm::vec2(0.0, 0.0);
+			if(m->mTextureCoords[0]){
+				vert.TexCoords.x = m->mTextureCoords[0][j].x;
+				vert.TexCoords.y = m->mTextureCoords[0][j].y;
+			}
+			else vert.TexCoords = glm::vec2(0.0, 0.0);
 		
 
-		vertices.push_back(vert);
-	}
-	//处理顶点索引
-	for(unsigned j = 0; j < m->mNumFaces; j++){
-		aiFace face = m->mFaces[j];
-		for(unsigned k = 0; k < face.mNumIndices; k++)
-			indices.push_back(face.mIndices[k]);
-	}
+			vertices.push_back(vert);
+		}
+		//处理顶点索引
+		for(unsigned j = 0; j < m->mNumFaces; j++){
+			aiFace face = m->mFaces[j];
+			for(unsigned k = 0; k < face.mNumIndices; k++)
+				indices.push_back(face.mIndices[k]);
+		}
 
 
 	//}
@@ -221,10 +223,10 @@ void MeshLinker::Rotate(float yaw, float pitch, float roll){
 	modelMatrix = totrotate * modelMatrix;
 }
 void MeshLinker::Move(glm::vec3 mvec){
-	modelMatrix = glm::translate(modelMatrix, mvec);
+	modelMatrix = glm::translate(modelMatrix, mvec) * modelMatrix;
 }
 void MeshLinker::Move(float x, float y, float z){
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z)) * modelMatrix;
 }
 
 void MeshLinker::Draw(Shader *dshader){
