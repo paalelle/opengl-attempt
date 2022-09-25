@@ -26,20 +26,29 @@ bool isMinimized = false;
 glm::mat4 projMat, viewMat, modelMat, mvMat;
 glm::mat3 normalMat;
 Camera mainCam;
-Shader testshader;
-Mesh testmesh_cube, testmesh_sphere;
+Shader simple_shader, testshader;
+//Mesh testmesh_cube, testmesh_sphere;
+Model testmodel_cube, testmodel_sphere, testmodel_nanosuit;
+Model testmodel1;
 //=======================================================================================
 
 
-const int modelCount = 4;
-MeshLinker testmarray[modelCount];
+//camera: 初始位于(0,0,0),面向z轴负方向
+
+const int modelCount = 5;
+
+ModelLinker testcube(&testmodel_cube, &simple_shader);
+ModelLinker testsphere(&testmodel_sphere, &simple_shader);
+ModelLinker test1(&testmodel1, &testshader);
+//MeshLinker testmarray[modelCount];
 
 //模型位置
 glm::vec3 modelPos[modelCount] = {
 	glm::vec3(0.0f, -2.0f, -5.0f),
 	glm::vec3(3.0f, -2.0f, -5.0f),
 	glm::vec3(-3.0f, -2.0f, -5.0f),
-	glm::vec3(0.0f, -3.0f, 0.0f)
+	glm::vec3(0.0f, -3.0f, -10.0f),
+	glm::vec3(10.0f, -2.0f, -10.0f)
 };
 
 
@@ -83,8 +92,9 @@ void init(){
 	glDepthFunc(GL_LEQUAL);
 	//======================================定义着色器========================================
 	
+	simple_shader.LoadShader("shaders/vert_simple.glsl", "shaders/frag_simple.glsl");
 	testshader.LoadShader("shaders/vert.glsl", "shaders/frag.glsl");
-	if(!testshader.IsLoaded()){
+	if(!testshader.IsLoaded() || !simple_shader.IsLoaded()){
 		system("pause");
 		exit(-1);
 	}
@@ -101,16 +111,39 @@ void init(){
 
 	//=======================================定义模型=========================================
 	
-	testmesh_cube.ImportModel("models/testcube_triangle2.obj");
-	testmesh_sphere.ImportModel("models/test_uvsphere_smooth.obj");
 
-	for(int i = 0; i < modelCount; i++){
+	//testmesh_cube.ImportMesh("models/testcube_triangle2.obj");
+	//testmesh_sphere.ImportMesh("models/test_uvsphere_smooth.obj");
+	testmodel_cube.ImportModel("models/testcube_triangle2.obj");
+	testmodel_sphere.ImportModel("models/test_uvsphere_smooth.obj");
+	testmodel_nanosuit.ImportModel("models/nanosuit/nanosuit.obj");
+	testmodel1.ImportModel("models/ganyu/ganyu.obj");
+
+
+	testcube.NewModelMat();
+	testcube.Move(-1, modelPos[0]);
+
+	testsphere.NewModelMat();
+	testsphere.Move(-1, modelPos[2]);
+
+	test1.NewModelMat();
+	test1.Move(-1, modelPos[3]);
+	test1.Scale(-1, 5.0);
+	/*
+	testmodel_cube.Move(modelPos[0]);
+	testmodel_sphere.Move(modelPos[2]);
+	testmodel_nanosuit.Move(modelPos[4]);
+
+	testmodel1.Move(modelPos[3]);
+	testmodel1.Scale(5.0);
+	*/
+	/*for(int i = 0; i < modelCount; i++){
 		testmarray[i].Move(modelPos[i]);
 	}
 	testmarray[0].SetLinkedMesh(&testmesh_cube);
 	testmarray[1].SetLinkedMesh(&testmesh_cube);
 	testmarray[2].SetLinkedMesh(&testmesh_cube);
-	testmarray[3].SetLinkedMesh(&testmesh_sphere);
+	testmarray[3].SetLinkedMesh(&testmesh_sphere);*/
 }
 
 
@@ -128,8 +161,12 @@ void framedisplay(){
 	//清除深度缓冲区
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	//testshader.Use();
+
 	
+	simple_shader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
+	simple_shader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
+	simple_shader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
+
 	testshader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
 	testshader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
 	testshader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
@@ -137,7 +174,51 @@ void framedisplay(){
 	//=======================================================================================
 
 	viewMat = mainCam.GetViewMat();
-	for(int i = 0; i < modelCount; i++){
+
+	//testcube.DrawAll(viewMat, projMat);
+	//testsphere.DrawAll(viewMat, projMat);
+	test1.DrawAll(viewMat, projMat);
+
+	modelMat = testcube.GetModelMat(0);
+	normalMat = glm::mat3(transpose(inverse(modelMat)));
+	mvMat = viewMat * modelMat;
+	simple_shader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
+	simple_shader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
+	simple_shader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
+	simple_shader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
+	testmodel_cube.Draw(&simple_shader);
+
+
+	modelMat = testsphere.GetModelMat(0);
+	normalMat = glm::mat3(transpose(inverse(modelMat)));
+	mvMat = viewMat * modelMat;
+	simple_shader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
+	simple_shader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
+	simple_shader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
+	simple_shader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
+	testmodel_sphere.Draw(&simple_shader);
+	
+
+	/*modelMat = testmodel_nanosuit.GetModelMat();
+	normalMat = glm::mat3(transpose(inverse(modelMat)));
+	mvMat = viewMat * modelMat;
+	testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
+	testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
+	testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
+	testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
+	testmodel_nanosuit.Draw(&testshader);*/
+
+
+	/*modelMat = testmodel1.GetModelMat();
+	normalMat = glm::mat3(transpose(inverse(modelMat)));
+	mvMat = viewMat * modelMat;
+	testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
+	testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
+	testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
+	testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
+	testmodel1.Draw(&testshader);*/
+
+	/*for(int i = 0; i < modelCount; i++){
 		modelMat = testmarray[i].GetModelMat();
 		normalMat = glm::mat3(transpose(inverse(modelMat)));
 		mvMat = viewMat * modelMat;
@@ -147,7 +228,7 @@ void framedisplay(){
 		testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
 		testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
 		testmarray[i].Draw(&testshader);
-	}
+	}*/
 
 	//=======================================================================================
 	

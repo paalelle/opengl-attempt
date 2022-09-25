@@ -28,11 +28,13 @@ private:
 	//垂直旋转角绝对值的最大值(弧度)
 	const float vAngleLimit = PI_f / 2;
 
-public:
-
 	float cameraMovementSpeed;	//相机移动速度
 	float cameraRotationSpeed;	//相机旋转速度
 
+	float speedBase;			//基础速度
+	float boostFactor;			//加速系数
+	
+public:
 
 	Camera();
 
@@ -42,6 +44,7 @@ public:
 	void MoveCamera_Side(float amount);
 	void MoveCamera_Vertical(float amount);
 	void RotateCamera(float thetaH, float thetaV);
+	void SpeedBoost(bool boosting);
 
 	glm::vec3 GetPosition();
 	glm::mat4 GetViewMat();

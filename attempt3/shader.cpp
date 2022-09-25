@@ -21,51 +21,60 @@ void Shader::Use(){
 
 void Shader::SendUniform_bool(bool value, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint loc = glGetUniformLocation(shaderID, var_name);
 	glUniform1i(loc, (int)value);
 }
 void Shader::SendUniform_Int(int value, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint loc = glGetUniformLocation(shaderID, var_name);
 	glUniform1i(loc, value);
 }
 void Shader::SendUniform_float(float value, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint loc = glGetUniformLocation(shaderID, var_name);
 	glUniform1f(loc, value);
 }
 void Shader::SendUniform_Vec3(float x, float y, float z, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint vLoc = glGetUniformLocation(shaderID, var_name);
 
 	glUniform3f(vLoc, x, y ,z);
 }
 void Shader::SendUniform_Vec3(const GLfloat *v, GLsizei count, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint vLoc = glGetUniformLocation(shaderID, var_name);
 
 	glUniform3fv(vLoc, count, v);
 }
 void Shader::SendUniform_Vec4(float x, float y, float z, float w, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint vLoc = glGetUniformLocation(shaderID, var_name);
 
 	glUniform4f(vLoc, x, y, z, w);
 }
 void Shader::SendUniform_Vec4(const GLfloat *v, GLsizei count, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint vLoc = glGetUniformLocation(shaderID, var_name);
 
 	glUniform4fv(vLoc, count, v);
 }
 void Shader::SendUniform_Mat3(const GLfloat *m, GLsizei count, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	GLint mLoc = glGetUniformLocation(shaderID, var_name);
 
 	glUniformMatrix3fv(mLoc, count, GL_FALSE, m);
 }
 void Shader::SendUniform_Mat4(const GLfloat *m, GLsizei count, const char *var_name){
 	if(!isValid) return;
+	glUseProgram(shaderID);
 	//获得shader程序中uniform变量的位置(ID)
 	GLint mLoc = glGetUniformLocation(shaderID, var_name);
 
@@ -74,6 +83,9 @@ void Shader::SendUniform_Mat4(const GLfloat *m, GLsizei count, const char *var_n
 	//第三个参数GL_FALSE代表不对矩阵做转置操作
 	glUniformMatrix4fv(mLoc, count, GL_FALSE, m);
 }
+
+
+
 
 
 

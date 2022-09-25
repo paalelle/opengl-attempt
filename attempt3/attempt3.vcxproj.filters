@@ -39,6 +39,9 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>库</Filter>
     </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -53,12 +56,21 @@
     <ClInclude Include="..\include\stb_image.h">
       <Filter>库</Filter>
     </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.glsl">
       <Filter>shader</Filter>
     </None>
     <None Include="shaders\vert.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\vert_simple.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\frag_simple.glsl">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

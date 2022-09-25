@@ -154,6 +154,7 @@
     <ClCompile Include="..\include\glad\glad.c" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="main3.cpp" />
+    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="stb_image.cpp" />
@@ -161,12 +162,15 @@
   <ItemGroup>
     <ClInclude Include="..\include\stb_image.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.glsl" />
+    <None Include="shaders\frag_simple.glsl" />
     <None Include="shaders\vert.glsl" />
+    <None Include="shaders\vert_simple.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

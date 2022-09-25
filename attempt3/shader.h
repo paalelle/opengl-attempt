@@ -44,6 +44,11 @@ public:
 	void SendUniform_Mat3(const GLfloat *m, GLsizei count, const char *var_name);
 	void SendUniform_Mat4(const GLfloat *m, GLsizei count, const char *var_name);
 
+
+	//void SendMatrices(glm::mat4 modelMat, glm::mat4 viewMat);
+
+
+
 	void LoadShader(const char *vertex_file_path, const char *fragment_file_path);
 };
 
