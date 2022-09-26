@@ -22,11 +22,15 @@ private:
 	GLuint shaderID;
 	bool isValid;
 
+	std::string shaderName;
 public:
 	Shader();
 	Shader(const char *vert_path, const char *frag_path);
+	Shader(const char *vert_path, const char *frag_path, std::string name);
 
 	bool IsLoaded();
+	std::string GetName();
+	void Rename(std::string name);
 
 	//启用此着色器
 	void Use();

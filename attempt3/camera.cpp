@@ -1,8 +1,5 @@
 #include "camera.h"
 
-const int windowWidth = 1024, windowHeight = 768;
-const float FOV = PI_f / 3;
-float windowAspect;
 
 
 
@@ -84,44 +81,4 @@ glm::mat4 Camera::GetViewMat(){
 	return glm::lookAt(cameraPosition, cameraPosition + facingVector, upVector);
 }
 
-
-
-//deltatime为两次调用帧更新函数的间隔时间
-void InputDetect(GLFWwindow *window, float deltatime, Camera &cam){
-
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-
-	cam.RotateCamera(xpos, ypos);
-
-	//鼠标指针归位至窗口中央
-	glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
-
-	if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-		cam.MoveCamera_Forward(deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-		cam.MoveCamera_Forward(-deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-		cam.MoveCamera_Side(-deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-		cam.MoveCamera_Side(deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-		cam.MoveCamera_Vertical(deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-		cam.MoveCamera_Vertical(-deltatime);
-	}
-	if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
-		cam.SpeedBoost(true);
-	}
-	else cam.SpeedBoost(false);
-
-	if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
-		glfwSetWindowShouldClose(window, true);
-	}
-}
 

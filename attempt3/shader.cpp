@@ -5,11 +5,25 @@ Shader::Shader(){
 	isValid = false;
 }
 Shader::Shader(const char *vert_path, const char *frag_path){
+	shaderID = 0;
+	isValid = false;
 	LoadShader(vert_path, frag_path);
+}
+Shader::Shader(const char *vert_path, const char *frag_path, std::string name){
+	shaderID = 0;
+	isValid = false;
+	LoadShader(vert_path, frag_path);
+	shaderName = name;
 }
 
 bool Shader::IsLoaded(){
 	return isValid;
+}
+std::string Shader::GetName(){
+	return shaderName;
+}
+void Shader::Rename(std::string name){
+	shaderName = name;
 }
 
 void Shader::Use(){

@@ -35,21 +35,26 @@ private:
     bool isValid;
 
 
+    std::string modelName;      //模型名字,自定义
+
     //处理一个node的所有信息
     //node: Assimp中数据类型,每个node包含了一定数量的mesh信息,整个场景中的所有node是层级关系
-    void processNode(aiNode *node, const aiScene *scene);
+    void ProcessNode(aiNode *node, const aiScene *scene);
 
     //处理一个mesh的所有信息
-    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+    Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
 
     //处理一个mesh中所有纹理信息
-    std::vector<Texture> loadTextures(aiMaterial *aimat, aiTextureType aitype, TextureType ttype);
+    std::vector<Texture> LoadTextures(aiMaterial *aimat, aiTextureType aitype, TextureType ttype);
 
 public:
     Model();
     Model(std::string path);
+    Model(std::string path, std::string name);
 
     bool IsLoaded();
+    std::string GetName();
+    void Rename(std::string name);
     void Draw(Shader *dshader);
 
 
@@ -62,6 +67,9 @@ public:
 //模型连接类,保存场景中所有同种模型的位置信息
 class ModelLinker{
 private:
+    friend class Scene;
+
+    //此ModelLinker指向的模型
     Model *pmodel;
 
     //整个model统一使用的shader,可选用

@@ -13,7 +13,6 @@ uniform sampler2D textureDiff1;
 uniform sampler2D textureNorm1;
 uniform sampler2D textureSpec1;
 
-//vec3 baseColor = vec3(0.5, 0.8, 0.9);
 float specularStrength = 2.0;           //高光强度系数
 float shininess = 32.0;                 //高光范围系数
 

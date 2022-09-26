@@ -10,23 +10,28 @@ Model::Model(std::string path){
 	isValid = false;
 	ImportModel(path);
 }
+Model::Model(std::string path, std::string name){
+	isValid = false;
+	ImportModel(path);
+	modelName = name;
+}
 
 
-void Model::processNode(aiNode *node, const aiScene *scene)
+void Model::ProcessNode(aiNode *node, const aiScene *scene)
 {
 	// 处理节点所有的网格（如果有的话）
 	for(unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
+		meshes.push_back(ProcessMesh(mesh, scene));
 	}
 	// 接下来对它的子节点重复这一过程
 	for(unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		processNode(node->mChildren[i], scene);
+		ProcessNode(node->mChildren[i], scene);
 	}
 }
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
+Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene){
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
@@ -74,13 +79,13 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
 	{
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-		std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE, texType_Diffuse);
+		std::vector<Texture> diffuseMaps = LoadTextures(material, aiTextureType_DIFFUSE, texType_Diffuse);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-		std::vector<Texture> normalMaps = loadTextures(material, aiTextureType_HEIGHT, texType_Normal);
+		std::vector<Texture> normalMaps = LoadTextures(material, aiTextureType_HEIGHT, texType_Normal);
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-		std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, texType_Specular);
+		std::vector<Texture> specularMaps = LoadTextures(material, aiTextureType_SPECULAR, texType_Specular);
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 
@@ -104,7 +109,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene){
 
 	return Mesh(vertices, indices, textures);
 }
-std::vector<Texture> Model::loadTextures(aiMaterial *aimat, aiTextureType aitype, TextureType ttype)
+std::vector<Texture> Model::LoadTextures(aiMaterial *aimat, aiTextureType aitype, TextureType ttype)
 {
 	std::vector<Texture> textures;
 	for(unsigned int i = 0; i < aimat->GetTextureCount(aitype); i++)
@@ -124,6 +129,12 @@ std::vector<Texture> Model::loadTextures(aiMaterial *aimat, aiTextureType aitype
 
 bool Model::IsLoaded(){
 	return isValid;
+}
+std::string Model::GetName(){
+	return modelName;
+}
+void Model::Rename(std::string name){
+	modelName = name;
 }
 
 void Model::Draw(Shader *dshader){
@@ -156,7 +167,7 @@ void Model::ImportModel(std::string path){
 	directory = path.substr(0, path.find_last_of('/'));
 
 
-	processNode(scene->mRootNode, scene);
+	ProcessNode(scene->mRootNode, scene);
 	isValid = true;
 
 
@@ -198,6 +209,7 @@ void ModelLinker::SetLinkedModel(Model *pm){
 void ModelLinker::BindShader(Shader *dshader){
 	mshader = dshader;
 }
+
 
 glm::mat4 ModelLinker::GetModelMat(unsigned index){
 	if(index >= modelMatrices.size()){
