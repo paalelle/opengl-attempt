@@ -1,16 +1,10 @@
 #include "world.h"
 
 
-const int windowWidth = 1024, windowHeight = 768;
-const float FOV = PI_f / 3;
-float windowAspect;
-
-
 
 Scene::Scene(){
 	projMat = viewMat = glm::mat4(1.0);
 }
-
 
 
 void Scene::Init(){
@@ -18,16 +12,7 @@ void Scene::Init(){
 
 	ResetProjMatrix();
 
-
-	//======================================OpenGL设置=======================================
-	//启用深度测试
-	glEnable(GL_DEPTH_TEST);
-	//深度测试时的替代方案: <= 时更新深度缓冲
-	glDepthFunc(GL_LEQUAL);
-	//背面剔除
-	glEnable(GL_CULL_FACE);
 }
-
 
 
 
@@ -40,7 +25,7 @@ void Scene::NewModel(std::string path, std::string name){
 	models.push_back(nmodel);
 }
 
-void Scene::NewModelInstance(unsigned model_index){
+void Scene::NewModelInstance(size_t model_index){
 	if(model_index >= models.size()){
 		std::cout << "Warning: Scene::NewModelInstance中指定的模型下标超出范围" << std::endl;
 		return;
@@ -50,7 +35,7 @@ void Scene::NewModelInstance(unsigned model_index){
 	modelInstances.push_back(nmodellinker);
 }
 void Scene::NewModelInstance(std::string model_name){
-	for(unsigned i = 0; i < models.size(); i++){
+	for(size_t i = 0; i < models.size(); i++){
 		if(models[i].GetName() == model_name){
 			ModelLinker nmodellinker(&models[i]);
 			modelInstances.push_back(nmodellinker);
@@ -60,15 +45,15 @@ void Scene::NewModelInstance(std::string model_name){
 
 	std::cout << "Warning: Scene::NewModelInstance中指定名称的模型不存在" << std::endl;
 }
-void Scene::NewModelInstance(unsigned model_index, std::string shader_name){
+void Scene::NewModelInstance(size_t model_index, std::string shader_name){
 	if(model_index >= models.size()){
 		std::cout << "Warning: Scene::NewModelInstance中指定的模型下标超出范围" << std::endl;
 		return;
 	}
 	
-	unsigned shader_index = shaders.size() + 1;
+	size_t shader_index = shaders.size() + 1;
 
-	for(unsigned i = 0; i < shaders.size(); i++){
+	for(size_t i = 0; i < shaders.size(); i++){
 		if(shaders[i].GetName() == shader_name){
 			shader_index = i;
 			break;
@@ -83,9 +68,9 @@ void Scene::NewModelInstance(unsigned model_index, std::string shader_name){
 	modelInstances.push_back(nmodellinker);
 }
 void Scene::NewModelInstance(std::string model_name, std::string shader_name){
-	unsigned model_index = models.size() + 1, shader_index = shaders.size() + 1;
+	size_t model_index = models.size() + 1, shader_index = shaders.size() + 1;
 
-	for(unsigned i = 0; i < models.size(); i++){
+	for(size_t i = 0; i < models.size(); i++){
 		if(models[i].GetName() == model_name){
 			model_index = i;
 			break;
@@ -96,7 +81,7 @@ void Scene::NewModelInstance(std::string model_name, std::string shader_name){
 		return;
 	}
 
-	for(unsigned i = 0; i < shaders.size(); i++){
+	for(size_t i = 0; i < shaders.size(); i++){
 		if(shaders[i].GetName() == shader_name){
 			shader_index = i;
 			break;
@@ -112,7 +97,7 @@ void Scene::NewModelInstance(std::string model_name, std::string shader_name){
 }
 
 
-ModelLinker *Scene::GetModelLinker(unsigned index){
+ModelLinker *Scene::GetModelLinker(size_t index){
 	if(index >= modelInstances.size()){
 		std::cout << "Warning: Scene::GetModelLinker中指定的下标超出范围" << std::endl;
 		return nullptr;
@@ -121,7 +106,7 @@ ModelLinker *Scene::GetModelLinker(unsigned index){
 	return &modelInstances[index];
 }
 ModelLinker *Scene::GetModelLinker(std::string model_name){
-	for(unsigned i = 0; i < modelInstances.size(); i++){
+	for(size_t i = 0; i < modelInstances.size(); i++){
 		if(modelInstances[i].pmodel->GetName() == model_name){
 			return &modelInstances[i];
 		}
@@ -183,6 +168,20 @@ void Scene::InputDetect(GLFWwindow *window, float deltatime){
 void Scene::Render(){
 	viewMat = mainCamera.GetViewMat();
 
+	for(size_t i = 0; i < shaders.size(); i++){
+		//把所有着色器通用的uniform变量传进去
+
+		//相机观察位置
+		shaders[i].SendUniform_Vec3(glm::value_ptr(mainCamera.GetPosition()), 1, "cameraPos");
+		
+		
+		shaders[i].SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
+		shaders[i].SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
+	}
+
+	for(size_t j = 0; j < modelInstances.size(); j++){
+		modelInstances[j].DrawAll(viewMat, projMat);
+	}
 }
 
 

@@ -9,6 +9,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+extern const int windowWidth;
+extern const int windowHeight;
+extern const float FOV;
+extern float windowAspect;
+
 
 class Camera{
 private:

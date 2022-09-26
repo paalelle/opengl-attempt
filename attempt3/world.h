@@ -7,13 +7,6 @@
 
 
 
-extern const int windowWidth;
-extern const int windowHeight;
-extern const float FOV;
-extern float windowAspect;
-
-
-
 //场景,由摄像机、一系列着色器、模型和为这些模型指定的模型矩阵构成
 //所有模型不能挂载子模型
 class Scene{
@@ -44,12 +37,12 @@ public:
 	void NewModel(std::string path, std::string name);
 	
 	//新建一个模型实例
-	void NewModelInstance(unsigned model_index);
+	void NewModelInstance(size_t model_index);
 	void NewModelInstance(std::string model_name);
-	void NewModelInstance(unsigned model_index, std::string shader_name);
+	void NewModelInstance(size_t model_index, std::string shader_name);
 	void NewModelInstance(std::string model_name, std::string shader_name);
 
-	ModelLinker *GetModelLinker(unsigned index);
+	ModelLinker *GetModelLinker(size_t index);
 	ModelLinker *GetModelLinker(std::string model_name);
 
 

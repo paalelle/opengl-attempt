@@ -93,7 +93,7 @@ public:
     void SetLinkedModel(Model *pm);
     void BindShader(Shader *dshader);
 
-    glm::mat4 GetModelMat(unsigned index);
+    glm::mat4 GetModelMat(size_t index);
     
     //对此模型创建一个新位置
     void NewModelMat();             //默认模型矩阵为I

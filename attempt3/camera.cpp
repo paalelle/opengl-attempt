@@ -1,6 +1,9 @@
 #include "camera.h"
 
 
+const int windowWidth = 1024, windowHeight = 768;
+const float FOV = PI_f / 3;
+float windowAspect;
 
 
 //初始化:位于(0,0,0),面向z轴负方向

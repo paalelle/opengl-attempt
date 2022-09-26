@@ -36,9 +36,9 @@ Scene scene;
 
 const int modelCount = 5;
 
-ModelLinker testcube(&testmodel_cube, &simple_shader);
-ModelLinker testsphere(&testmodel_sphere, &simple_shader);
-ModelLinker test1(&testmodel1, &testshader);
+//ModelLinker testcube(&testmodel_cube, &simple_shader);
+//ModelLinker testsphere(&testmodel_sphere, &simple_shader);
+//ModelLinker test1(&testmodel1, &testshader);
 
 //Ä£ÐÍÎ»ÖÃ
 glm::vec3 modelPos[modelCount] = {
@@ -115,14 +115,17 @@ void init(){
 
 	scene.NewModelInstance("testmodel_cube", "simple_shader");
 	mdlk = scene.GetModelLinker(0);
+	mdlk->NewModelMat();
 	mdlk->Move(-1, modelPos[0]);
 
 	scene.NewModelInstance("testmodel_sphere", "simple_shader");
 	mdlk = scene.GetModelLinker(1);
+	mdlk->NewModelMat();
 	mdlk->Move(-1, modelPos[2]);
 
 	scene.NewModelInstance("ganyu", "testshader");
 	mdlk = scene.GetModelLinker(2);
+	mdlk->NewModelMat();
 	mdlk->Move(-1, modelPos[3]);
 	mdlk->Scale(-1, 5.0);
 
@@ -145,7 +148,10 @@ void framedisplay(){
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 
+	scene.Render();
+
 	
+	/*
 	simple_shader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
 	simple_shader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
 	simple_shader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
@@ -153,14 +159,15 @@ void framedisplay(){
 	testshader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
 	testshader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
 	testshader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
+	*/
 
 	//=======================================================================================
 
-	viewMat = mainCam.GetViewMat();
+	//viewMat = mainCam.GetViewMat();
 
-	testcube.DrawAll(viewMat, projMat);
-	testsphere.DrawAll(viewMat, projMat);
-	test1.DrawAll(viewMat, projMat);
+	//testcube.DrawAll(viewMat, projMat);
+	//testsphere.DrawAll(viewMat, projMat);
+	//test1.DrawAll(viewMat, projMat);
 
 	/*modelMat = testcube.GetModelMat(0);
 	normalMat = glm::mat3(transpose(inverse(modelMat)));

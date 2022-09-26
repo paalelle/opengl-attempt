@@ -211,7 +211,7 @@ void ModelLinker::BindShader(Shader *dshader){
 }
 
 
-glm::mat4 ModelLinker::GetModelMat(unsigned index){
+glm::mat4 ModelLinker::GetModelMat(size_t index){
 	if(index >= modelMatrices.size()){
 		std::cout << "Warning: 模型矩阵下标超出范围,当前模型矩阵数: " << modelMatrices.size() << std::endl;
 		return glm::mat4(1.0);
@@ -233,7 +233,7 @@ void ModelLinker::SetModelMat(int index, glm::mat4 m){
 		return;
 	}
 	else if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = m;
 		}
 		return;
@@ -255,7 +255,7 @@ void ModelLinker::Rotate(int index, float yaw, float pitch, float roll){
 			roll, glm::vec3(1.0, 0.0, 0.0));
 
 	if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = totrotate * modelMatrices[i];
 		}
 		return;
@@ -269,7 +269,7 @@ void ModelLinker::Move(int index, glm::vec3 mvec){
 		return;
 	}
 	else if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = glm::translate(modelMatrices[i], mvec);
 		}
 		return;
@@ -283,7 +283,7 @@ void ModelLinker::Move(int index, float x, float y, float z){
 		return;
 	}
 	else if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = glm::translate(modelMatrices[i], glm::vec3(x, y, z));
 		}
 		return;
@@ -297,7 +297,7 @@ void ModelLinker::Scale(int index, float val){
 		return;
 	}
 	else if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = glm::scale(modelMatrices[i], glm::vec3(val, val, val));
 		}
 		return;
@@ -311,7 +311,7 @@ void ModelLinker::Scale(int index, float x, float y, float z){
 		return;
 	}
 	else if(index == -1){
-		for(unsigned i = 0; i < modelMatrices.size(); i++){
+		for(size_t i = 0; i < modelMatrices.size(); i++){
 			modelMatrices[i] = glm::scale(modelMatrices[i], glm::vec3(x, y, z));
 		}
 		return;
@@ -325,7 +325,7 @@ void ModelLinker::DrawAll(Shader *dshader, glm::mat4 mview, glm::mat4 mproj){
 	dshader->Use();
 
 	dshader->SendUniform_Mat4(glm::value_ptr(mproj), 1, "proj_matrix");
-	for(unsigned i = 0; i < modelMatrices.size(); i++){
+	for(size_t i = 0; i < modelMatrices.size(); i++){
 
 		normalMatrix = glm::mat3(transpose(inverse(modelMatrices[i])));
 		mvMatrix = mview * modelMatrices[i];
@@ -341,7 +341,7 @@ void ModelLinker::DrawAll(glm::mat4 mview, glm::mat4 mproj){
 	mshader->Use();
 
 	mshader->SendUniform_Mat4(glm::value_ptr(mproj), 1, "proj_matrix");
-	for(unsigned i = 0; i < modelMatrices.size(); i++){
+	for(size_t i = 0; i < modelMatrices.size(); i++){
 
 		normalMatrix = glm::mat3(transpose(inverse(modelMatrices[i])));
 		mvMatrix = mview * modelMatrices[i];

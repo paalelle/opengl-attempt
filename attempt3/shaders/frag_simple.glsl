@@ -5,7 +5,7 @@ in vec3 wNormal;
 in vec2 texCoord;
 out vec4 fragColor;
 
-uniform vec3 viewPos;
+uniform vec3 cameraPos;
 uniform vec3 lightDir;
 uniform vec3 lightColor;
 
@@ -15,12 +15,12 @@ float shininess = 32.0;                 //高光范围系数
 
 void main(){
     vec3 nlightDir = normalize(lightDir);
-    vec3 nviewDir = normalize(viewPos - wPosition);
+    vec3 nviewDir = normalize(cameraPos - wPosition);
 
     float diffusek = max(0.0, dot(-nlightDir, wNormal));
     vec3 diffuse = diffusek * lightColor;
 
-    float ambientk = max(0.2, 0.3 * dot(vec3(0, -1.0, 0), wNormal));
+    float ambientk = max(0.5, 0.8 * dot(vec3(0, -1.0, 0), wNormal));
     vec3 ambient = ambientk * lightColor;
 
     //Blinn-Phong
