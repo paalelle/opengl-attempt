@@ -20,7 +20,7 @@ void main(){
     float diffusek = max(0.0, dot(-nlightDir, wNormal));
     vec3 diffuse = diffusek * lightColor;
 
-    float ambientk = max(0.5, 0.8 * dot(vec3(0, -1.0, 0), wNormal));
+    float ambientk = max(0.2, 0.3 * dot(vec3(0, -1.0, 0), wNormal));
     vec3 ambient = ambientk * lightColor;
 
     //Blinn-Phong

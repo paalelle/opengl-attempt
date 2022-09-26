@@ -83,7 +83,7 @@ private:
     
     glm::mat4 mvMatrix;         //模型矩阵和观察矩阵的乘积,在绘制时传入
     glm::mat4 projMatrix;       //投影矩阵,在绘制时传入
-    glm::mat4 normalMatrix;     //法向量修正矩阵,在绘制时计算
+    glm::mat3 normalMatrix;     //法向量修正矩阵,在绘制时计算
 
 public:
     ModelLinker();
