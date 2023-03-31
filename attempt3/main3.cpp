@@ -102,32 +102,33 @@ void init(){
 
 	//--------------------------------------定义着色器----------------------------------------
 	scene.NewShader("shaders/vert_simple.glsl", "shaders/frag_simple.glsl", "simple_shader");
-	scene.NewShader("shaders/vert.glsl", "shaders/frag.glsl", "testshader");
+	scene.NewShader("shaders/vert_anime.glsl", "shaders/frag_anime.glsl", "anime_shader");
+	scene.NewShader("shaders/vert_whitesmooth.glsl", "shaders/frag_whitesmooth.glsl", "whitesmooth");
 
 	//---------------------------------------导入模型-----------------------------------------
 	scene.NewModel("models/testcube_triangle2.obj", "testmodel_cube");
 	scene.NewModel("models/test_uvsphere_smooth.obj", "testmodel_sphere");
-	scene.NewModel("models/nanosuit/nanosuit.obj", "testmodel_nanosuit");
-	scene.NewModel("models/ganyu/ganyu.obj", "ganyu");
+	//scene.NewModel("models/nanosuit/nanosuit.obj", "testmodel_nanosuit");
+	//scene.NewModel("models/ganyu/ganyu.obj", "ganyu");
 
 	//-------------------------------------定义模型实例---------------------------------------
 	ModelLinker *mdlk;
 
-	scene.NewModelInstance("testmodel_cube", "simple_shader");
+	scene.NewModelInstance("testmodel_cube", "whitesmooth");
 	mdlk = scene.GetModelLinker(0);
 	mdlk->NewModelMat();
 	mdlk->Move(-1, modelPos[0]);
 
-	scene.NewModelInstance("testmodel_sphere", "simple_shader");
+	scene.NewModelInstance("testmodel_sphere", "whitesmooth");
 	mdlk = scene.GetModelLinker(1);
 	mdlk->NewModelMat();
 	mdlk->Move(-1, modelPos[2]);
 
-	scene.NewModelInstance("ganyu", "testshader");
-	mdlk = scene.GetModelLinker(2);
-	mdlk->NewModelMat();
-	mdlk->Move(-1, modelPos[3]);
-	mdlk->Scale(-1, 5.0);
+	//scene.NewModelInstance("ganyu", "anime_shader");
+	//mdlk = scene.GetModelLinker(2);
+	//mdlk->NewModelMat();
+	//mdlk->Move(-1, modelPos[3]);
+	//mdlk->Scale(-1, 5.0);
 
 
 }
@@ -150,77 +151,6 @@ void framedisplay(){
 
 	scene.Render();
 
-	
-	/*
-	simple_shader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
-	simple_shader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
-	simple_shader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
-
-	testshader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
-	testshader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
-	testshader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
-	*/
-
-	//=======================================================================================
-
-	//viewMat = mainCam.GetViewMat();
-
-	//testcube.DrawAll(viewMat, projMat);
-	//testsphere.DrawAll(viewMat, projMat);
-	//test1.DrawAll(viewMat, projMat);
-
-	/*modelMat = testcube.GetModelMat(0);
-	normalMat = glm::mat3(transpose(inverse(modelMat)));
-	mvMat = viewMat * modelMat;
-	simple_shader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-	simple_shader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-	simple_shader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-	simple_shader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-	testmodel_cube.Draw(&simple_shader);
-
-
-	modelMat = testsphere.GetModelMat(0);
-	normalMat = glm::mat3(transpose(inverse(modelMat)));
-	mvMat = viewMat * modelMat;
-	simple_shader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-	simple_shader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-	simple_shader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-	simple_shader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-	testmodel_sphere.Draw(&simple_shader);*/
-	
-
-	/*modelMat = testmodel_nanosuit.GetModelMat();
-	normalMat = glm::mat3(transpose(inverse(modelMat)));
-	mvMat = viewMat * modelMat;
-	testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-	testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-	testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-	testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-	testmodel_nanosuit.Draw(&testshader);*/
-
-
-	/*modelMat = testmodel1.GetModelMat();
-	normalMat = glm::mat3(transpose(inverse(modelMat)));
-	mvMat = viewMat * modelMat;
-	testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-	testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-	testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-	testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-	testmodel1.Draw(&testshader);*/
-
-	/*for(int i = 0; i < modelCount; i++){
-		modelMat = testmarray[i].GetModelMat();
-		normalMat = glm::mat3(transpose(inverse(modelMat)));
-		mvMat = viewMat * modelMat;
-
-		testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-		testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-		testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-		testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-		testmarray[i].Draw(&testshader);
-	}*/
-
-	//=======================================================================================
 	
 	lastFrameTime = curFrameTime;
 }

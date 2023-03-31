@@ -67,16 +67,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\frag.glsl">
+    <None Include="shaders\frag_whitesmooth.glsl">
       <Filter>shader</Filter>
     </None>
-    <None Include="shaders\vert.glsl">
+    <None Include="shaders\vert_whitesmooth.glsl">
       <Filter>shader</Filter>
     </None>
     <None Include="shaders\vert_simple.glsl">
       <Filter>shader</Filter>
     </None>
     <None Include="shaders\frag_simple.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\frag_anime.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\vert_anime.glsl">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

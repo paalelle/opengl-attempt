@@ -126,6 +126,13 @@ void Scene::ResetProjMatrix(){
 
 void Scene::InputDetect(GLFWwindow *window, float deltatime){
 
+	if(glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS){
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		return;
+	}
+	else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -161,6 +168,7 @@ void Scene::InputDetect(GLFWwindow *window, float deltatime){
 	if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
 		glfwSetWindowShouldClose(window, true);
 	}
+
 }
 
 
