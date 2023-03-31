@@ -3,4 +3,6 @@
 opengl学习测试
 
 - rasterization
-- path tracing
+- path tracing (attempt 5)
+
+仍待更新...
