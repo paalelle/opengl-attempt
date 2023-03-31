@@ -17,87 +17,101 @@
 
 #include "shader.h"
 #include "camera.h"
+#include "mesh.h"
+
+//见 https://learnopengl-cn.github.io/03%20Model%20Loading/03%20Model/
 
 
 
-//关于顶点的结构体
-struct Vertex{
-    glm::vec3 Position;     //顶点位置
-    glm::vec3 Normal;       //法向量
-    glm::vec2 TexCoords;    //顶点对应纹理坐标
-
-    //debug
-    void PrintData();
-};
 
 
-enum TextureType{
-    None = 0,       //未加载
-    Albedo = 1      //漫反射贴图
-};
-//纹理类
-class Texture{
-private:
-    GLuint id;
-    TextureType type;
-public:
-    Texture();
-
-    void SetGLInfo();
-    void LoadFromFile(const char *path, TextureType t);
-};
-
-
-//网格类
-class Mesh{
-private:
-    GLuint VAO, VBO, EBO;   //对应此网格的VAO,VBO,EBO
-
-    std::vector<Vertex> vertices;     //顶点信息
-    std::vector<GLuint> indices;      //关于EBO的各三角形的顶点索引信息
-    
-    Shader *mshader;
-
-    bool isValid;
-public:
-    Mesh();
-
-    bool IsLoaded();
-    void SetGLInfo();
-    void Load(std::vector<Vertex> vert, std::vector<GLuint> ind);
-    void BindShader(Shader *dshader);
-    void Draw(Shader *dshader);
-    void Draw();
-    
-
-    void ImportModel(const char *path);
-};
-
-class MeshLinker{
-private:
-    Mesh *pmesh;
-
-    glm::mat4 modelMatrix;
-public:
-    MeshLinker();
-    MeshLinker(Mesh *pm);
-
-    glm::mat4 GetModelMat();
-    void SetModelMat(glm::mat4 m);
-    void SetLinkedMesh(Mesh *pm);
-
-    //绕三个轴旋转的欧拉角(偏航角,俯仰角,横滚角)
-    void Rotate(float yaw, float pitch, float roll);
-    void Move(glm::vec3 mvec);
-    void Move(float x, float y, float z);
-
-    void Draw(Shader *dshader);
-    void Draw();
-};
 
 
 class Model{
+private:
+    std::vector<Mesh> meshes;
+    std::string directory;
 
+    bool isValid;
+
+
+    std::string modelName;      //模型名字,自定义
+
+    //处理一个node的所有信息
+    //node: Assimp中数据类型,每个node包含了一定数量的mesh信息,整个场景中的所有node是层级关系
+    void ProcessNode(aiNode *node, const aiScene *scene);
+
+    //处理一个mesh的所有信息
+    Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
+
+    //处理一个mesh中所有纹理信息
+    std::vector<Texture> LoadTextures(aiMaterial *aimat, aiTextureType aitype, TextureType ttype);
+
+public:
+    Model();
+    Model(std::string path);
+    Model(std::string path, std::string name);
+
+    bool IsLoaded();
+    std::string GetName();
+    void Rename(std::string name);
+    void Draw(Shader *dshader);
+
+
+    void ImportModel(std::string path);
+
+    
 };
 
+
+//模型连接类,保存场景中所有同种模型的位置信息
+class ModelLinker{
+private:
+    friend class Scene;
+
+    //此ModelLinker指向的模型
+    Model *pmodel;
+
+    //整个model统一使用的shader,可选用
+    Shader *mshader;
+
+
+    //模型矩阵序列
+    //对应此模型在场景中的所有摆放位置
+    std::vector<glm::mat4> modelMatrices;
+
+    
+    glm::mat4 mvMatrix;         //模型矩阵和观察矩阵的乘积,在绘制时传入
+    glm::mat4 projMatrix;       //投影矩阵,在绘制时传入
+    glm::mat3 normalMatrix;     //法向量修正矩阵,在绘制时计算
+
+public:
+    ModelLinker();
+    ModelLinker(Model *pm);
+    ModelLinker(Model *pm, Shader *ps);
+
+    void SetLinkedModel(Model *pm);
+    void BindShader(Shader *dshader);
+
+    glm::mat4 GetModelMat(size_t index);
+    
+    //对此模型创建一个新位置
+    void NewModelMat();             //默认模型矩阵为I
+    void NewModelMat(glm::mat4 m);
+    
+    //对模型矩阵变换的函数
+    //若index填-1,则对所有此模型的实例对应的模型矩阵变换
+    void SetModelMat(int index, glm::mat4 m);
+    void Rotate(int index, float yaw, float pitch, float roll);     //绕三个轴旋转的欧拉角(偏航角,俯仰角,横滚角)
+    void Move(int index, glm::vec3 mvec);
+    void Move(int index, float x, float y, float z);
+    void Scale(int index, float val);
+    void Scale(int index, float x, float y, float z);
+
+    //使用dshader绘制所有模型
+    void DrawAll(Shader *dshader, glm::mat4 mview, glm::mat4 mproj);
+
+    //使用mshader绘制所有模型
+    void DrawAll(glm::mat4 mview, glm::mat4 mproj);
+};
 

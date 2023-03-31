@@ -7,7 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt2", "attempt2\attemp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt1", "attempt1\attempt1.vcxproj", "{797D9250-A853-48D4-9037-E1593669DF69}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt3", "attempt3\attempt3.vcxproj", "{5682E618-BDC7-4158-B3FA-9785DFF1A1A4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt3-loadmodel", "attempt3\attempt3.vcxproj", "{5682E618-BDC7-4158-B3FA-9785DFF1A1A4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt4-shadertest", "attempt4\attempt4.vcxproj", "{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "attempt5-raytracing", "attempt5\attempt5.vcxproj", "{DD24C195-EC8D-409B-B386-568BEAC13F83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,22 @@ Global
 		{5682E618-BDC7-4158-B3FA-9785DFF1A1A4}.Release|x64.Build.0 = Release|x64
 		{5682E618-BDC7-4158-B3FA-9785DFF1A1A4}.Release|x86.ActiveCfg = Release|Win32
 		{5682E618-BDC7-4158-B3FA-9785DFF1A1A4}.Release|x86.Build.0 = Release|Win32
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Debug|x64.ActiveCfg = Debug|x64
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Debug|x64.Build.0 = Debug|x64
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Debug|x86.ActiveCfg = Debug|Win32
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Debug|x86.Build.0 = Debug|Win32
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Release|x64.ActiveCfg = Release|x64
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Release|x64.Build.0 = Release|x64
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Release|x86.ActiveCfg = Release|Win32
+		{6150EFB3-8D1C-447C-BC7F-49F16C5BA626}.Release|x86.Build.0 = Release|Win32
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Debug|x64.ActiveCfg = Debug|x64
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Debug|x64.Build.0 = Debug|x64
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Debug|x86.ActiveCfg = Debug|Win32
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Debug|x86.Build.0 = Debug|Win32
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Release|x64.ActiveCfg = Release|x64
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Release|x64.Build.0 = Release|x64
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Release|x86.ActiveCfg = Release|Win32
+		{DD24C195-EC8D-409B-B386-568BEAC13F83}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

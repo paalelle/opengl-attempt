@@ -39,6 +39,12 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>库</Filter>
     </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -53,12 +59,30 @@
     <ClInclude Include="..\include\stb_image.h">
       <Filter>库</Filter>
     </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\frag.glsl">
+    <None Include="shaders\frag_whitesmooth.glsl">
       <Filter>shader</Filter>
     </None>
-    <None Include="shaders\vert.glsl">
+    <None Include="shaders\vert_whitesmooth.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\vert_simple.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\frag_simple.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\frag_anime.glsl">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shaders\vert_anime.glsl">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "model.h"
 #include "camera.h"
+#include "world.h"
 
 
 
@@ -23,23 +24,29 @@ bool isMinimized = false;
 //避免在函数中临时分配内存,降低效率
 //shader程序中uniform变量的位置(ID)
 //分别代表mv_matrix, proj_matrix
-glm::mat4 projMat, viewMat, modelMat, mvMat;
 glm::mat3 normalMat;
-Camera mainCam;
-Shader testshader;
-Mesh testmesh_cube, testmesh_sphere;
+Model testmodel_cube, testmodel_sphere, testmodel_nanosuit;
+Model testmodel1;
+
+Scene scene;
 //=======================================================================================
 
 
-const int modelCount = 4;
-MeshLinker testmarray[modelCount];
+//camera: 初始位于(0,0,0),面向z轴负方向
+
+const int modelCount = 5;
+
+//ModelLinker testcube(&testmodel_cube, &simple_shader);
+//ModelLinker testsphere(&testmodel_sphere, &simple_shader);
+//ModelLinker test1(&testmodel1, &testshader);
 
 //模型位置
 glm::vec3 modelPos[modelCount] = {
 	glm::vec3(0.0f, -2.0f, -5.0f),
 	glm::vec3(3.0f, -2.0f, -5.0f),
 	glm::vec3(-3.0f, -2.0f, -5.0f),
-	glm::vec3(0.0f, -3.0f, 0.0f)
+	glm::vec3(0.0f, -3.0f, -10.0f),
+	glm::vec3(10.0f, -2.0f, -10.0f)
 };
 
 
@@ -60,57 +67,70 @@ void OnWindowRescale(GLFWwindow *window, int newWindowWidth, int newWindowHeight
 	//重新定义视口矩形
 	glViewport(0, 0, newWindowWidth, newWindowHeight);
 	//重新定义投影矩阵
-	projMat = glm::perspective(FOV, windowAspect, 0.1f, 1000.0f);
+	scene.ResetProjMatrix();
 }
 
 
 //初始化
 void init(){
 
-	mainCam.SetCamera(glm::vec3(0.0f, 0.0f, 5.0f), PI_f, 0);
-
 	//将光标设置在窗口中央
 	glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
 	//隐藏光标
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	//======================================着色器设置========================================
+	//======================================OpenGL设置=======================================
 	//启用深度测试
 	glEnable(GL_DEPTH_TEST);
-	//背面剔除
-	//glEnable(GL_CULL_FACE);
-	//?
+	//深度测试时的替代方案: <= 时更新深度缓冲
 	glDepthFunc(GL_LEQUAL);
-	//======================================定义着色器========================================
-	
-	testshader.LoadShader("shaders/vert.glsl", "shaders/frag.glsl");
-	if(!testshader.IsLoaded()){
-		system("pause");
-		exit(-1);
-	}
-	
+	//背面剔除
+	glEnable(GL_CULL_FACE);
 	//=======================================================================================
+
 
 	int curWindowWidth, curWindowHeight;
 	glfwGetFramebufferSize(window, &curWindowWidth, &curWindowHeight);
 	windowAspect = (float)curWindowWidth / curWindowHeight;
-	projMat = glm::perspective(FOV, windowAspect, 0.1f, 1000.0f);
 
 	//设置改变窗口大小时的回调函数
 	glfwSetWindowSizeCallback(window, OnWindowRescale);
 
-	//=======================================定义模型=========================================
-	
-	testmesh_cube.ImportModel("models/testcube_triangle2.obj");
-	testmesh_sphere.ImportModel("models/test_uvsphere_smooth.obj");
+	//====================================世界场景初始化======================================
 
-	for(int i = 0; i < modelCount; i++){
-		testmarray[i].Move(modelPos[i]);
-	}
-	testmarray[0].SetLinkedMesh(&testmesh_cube);
-	testmarray[1].SetLinkedMesh(&testmesh_cube);
-	testmarray[2].SetLinkedMesh(&testmesh_cube);
-	testmarray[3].SetLinkedMesh(&testmesh_sphere);
+	scene.Init();
+
+	//--------------------------------------定义着色器----------------------------------------
+	scene.NewShader("shaders/vert_simple.glsl", "shaders/frag_simple.glsl", "simple_shader");
+	scene.NewShader("shaders/vert_anime.glsl", "shaders/frag_anime.glsl", "anime_shader");
+	scene.NewShader("shaders/vert_whitesmooth.glsl", "shaders/frag_whitesmooth.glsl", "whitesmooth");
+
+	//---------------------------------------导入模型-----------------------------------------
+	scene.NewModel("models/testcube_triangle2.obj", "testmodel_cube");
+	scene.NewModel("models/test_uvsphere_smooth.obj", "testmodel_sphere");
+	//scene.NewModel("models/nanosuit/nanosuit.obj", "testmodel_nanosuit");
+	//scene.NewModel("models/ganyu/ganyu.obj", "ganyu");
+
+	//-------------------------------------定义模型实例---------------------------------------
+	ModelLinker *mdlk;
+
+	scene.NewModelInstance("testmodel_cube", "whitesmooth");
+	mdlk = scene.GetModelLinker(0);
+	mdlk->NewModelMat();
+	mdlk->Move(-1, modelPos[0]);
+
+	scene.NewModelInstance("testmodel_sphere", "whitesmooth");
+	mdlk = scene.GetModelLinker(1);
+	mdlk->NewModelMat();
+	mdlk->Move(-1, modelPos[2]);
+
+	//scene.NewModelInstance("ganyu", "anime_shader");
+	//mdlk = scene.GetModelLinker(2);
+	//mdlk->NewModelMat();
+	//mdlk->Move(-1, modelPos[3]);
+	//mdlk->Scale(-1, 5.0);
+
+
 }
 
 
@@ -119,7 +139,7 @@ void framedisplay(){
 	static double lastFrameTime = glfwGetTime(), curFrameTime;
 	curFrameTime = glfwGetTime();
 
-	InputDetect(window, (float)(curFrameTime - lastFrameTime), mainCam);
+	scene.InputDetect(window, (float)(curFrameTime - lastFrameTime));
 
 	//设置clearcolor
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -128,28 +148,9 @@ void framedisplay(){
 	//清除深度缓冲区
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	//testshader.Use();
-	
-	testshader.SendUniform_Vec3(glm::value_ptr(mainCam.GetPosition()), 1, "viewPos");
-	testshader.SendUniform_Vec3(0.5, -2.0, -1.0, "lightDir");
-	testshader.SendUniform_Vec3(1.0, 1.0, 1.0, "lightColor");
 
-	//=======================================================================================
+	scene.Render();
 
-	viewMat = mainCam.GetViewMat();
-	for(int i = 0; i < modelCount; i++){
-		modelMat = testmarray[i].GetModelMat();
-		normalMat = glm::mat3(transpose(inverse(modelMat)));
-		mvMat = viewMat * modelMat;
-
-		testshader.SendUniform_Mat4(glm::value_ptr(modelMat), 1, "model_matrix");
-		testshader.SendUniform_Mat4(glm::value_ptr(mvMat), 1, "mv_matrix");
-		testshader.SendUniform_Mat4(glm::value_ptr(projMat), 1, "proj_matrix");
-		testshader.SendUniform_Mat3(glm::value_ptr(normalMat), 1, "normal_matrix");
-		testmarray[i].Draw(&testshader);
-	}
-
-	//=======================================================================================
 	
 	lastFrameTime = curFrameTime;
 }
